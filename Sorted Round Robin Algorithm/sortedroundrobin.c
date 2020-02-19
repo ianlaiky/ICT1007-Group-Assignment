@@ -1,7 +1,7 @@
 
 #include<stdio.h> 
 
-main() {
+int main() {
 	/* 
 	Declare int variable for usage
 	i, n, j and o = counter
