@@ -1,20 +1,18 @@
-// Round Robin Algorithm
-// To implement SJF into Round Robin Algorithm
+
 #include<stdio.h> 
 
 main() {
 	/* 
 	Declare int variable for usage
-	i, n & j = counter
+	i, n, j and o = counter
 	bu = burst time array
 	wa = waiting time array
 	tat = turnaround time array
-	t = time slice
+	at = average time slice
 	ct = another burst time array (burst time according to code)
 	max = literally max
 	*/
-	int i, j, n, bu[20], wa[20], tat[20], t, ct[20], max;
-
+	int i, j, n, o, k, m, bu[20], wa[20], tat[20], at, ct[20], max, process[20], sum;
 	/* 
 	Declare float variable for usage
 	awt = average waiting time
@@ -33,6 +31,7 @@ main() {
 	   eg processes #1 -> 3 unit burst time	
 	*/
 	for(i=0; i<n; i++)   {
+		process[i]=i;
 		/* i increment by 1 so stdout to user that it is inputing process 1 */
 		printf("\nEnter Burst Time for process %d: ", i+1);
 		/* read user data from stdin, burst time and put into array*/
@@ -41,11 +40,28 @@ main() {
 		ct[i]=bu[i];  
 	}  
 	
-	/* text to be written to stdout */
-	printf("\nEnter the size of time slice: ");  
+	for(o=0;o<n;o++)
+	{
+		for(k=o+1;k<n;k++)
+		{
+			if(bu[o]>bu[k])
+				{
+					temp=bu[o];
+					ct[o] = bu[o]=bu[k];
+					ct[k] = bu[k]=temp;
 
-	/* read user data from stdin, time slice (how long can a process use (unit)) */
-	scanf("%d",&t);  
+					temp=process[o];
+					process[o]=process[k];
+					process[k]=temp;
+				}
+		}	
+	}
+	temp  = 0;
+	for (m=0; m<n; m++) 
+	{
+		sum += bu[m];
+	}
+	at = sum/n; 
 
 	/* max = bu[0] value*/
 	max=bu[0];  
@@ -55,7 +71,7 @@ main() {
 			max=bu[i];  
 	
 	/* it will guarantee a completed run of the smaller quantums */
-	for(j=0; j<(max/t)+1; j++)  
+	for(j=0; j<(max/at)+1; j++)  
 	{   
 		/* for each process */
 		for(i=0; i<n; i++)   { 
@@ -67,7 +83,7 @@ main() {
 				   set temp =  last temp plus current burst time.
 				   set current burst time to 0
 				*/
-				if(bu[i]<=t){
+				if(bu[i]<=at){
 					tat[i]=temp+bu[i];
 					temp=temp+bu[i];
 					bu[i]=0;
@@ -79,8 +95,8 @@ main() {
 				   set temp = temp + time slice
 				 */
 				else{
-					bu[i]=bu[i]-t;
-					temp=temp+t;
+					bu[i]=bu[i]-at;
+					temp=temp+at;
 				}  
 		}
 
@@ -96,12 +112,12 @@ main() {
 		awt+=wa[i];
 	}
 
-	printf("\n\nUsing Round Robin Scheduling\n");
+	printf("\n\nUsing Sorted Round Robin Scheduling\n");
 
 	/* print out process # burst time, waiting time, turnaround time */
 	printf("\n\tPROCESS\t BURST TIME \t WAITING TIME \t TURNAROUND TIME\n");
 	for(i=0;i<n;i++){
-		printf("\t%d \t %d \t\t %d \t\t %d \n",i+1,ct[i],wa[i],tat[i]);
+		printf("\t%d \t %d \t\t %d \t\t %d \n",process[i]+1,ct[i],wa[i],tat[i]);
 	}
 
 	/* Average Waiting time = Total waiting time / no of process
@@ -109,6 +125,7 @@ main() {
 	*/
 	printf("\n\nAverage Waiting Time= %f",awt/n); 
   	printf("\nAverage Turnaround Time = %f\n",att/n); 
+	printf("\nAverage Time Slice %d", at);
 	
 	return 0;
 } 
