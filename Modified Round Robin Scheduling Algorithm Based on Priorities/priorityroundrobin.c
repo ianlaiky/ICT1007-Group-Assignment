@@ -1,10 +1,6 @@
 #include <stdio.h>
 
-#define iBurstTime {23, 19, 10, 11, 5}
-#define PRIORITY {4, 2, 1, 3, 5}
-#define TIMESLICE 5
-
-main()
+int main()
 {
 	/*
 	 * 	i, j  -  for loop counters
@@ -19,98 +15,113 @@ main()
 	 *	att - average turn around time
 	 *	temp - 	temporary variable
 	*/
-	int i, j, n, bu[20], wa[20], tat[20], t, ct[20], max, pl[20], a, pn[20], index[20];
+	int i, j, n, bu[20], wa[20], tat[20], t, ct[20], max, pl[20], a, pn[20], b;
 	float awt=0, att=0, temp=0;
-	bool empty=0
 	
-	for(i=0; i<20; i++)
-	{
-		if(iBurstTime[i])
-		{
-			bu[i]=iBurstTime[i];
-			ct[i]=bu[i];
-			pl[i]=PRIORITY[i];
-			pn[i]=i+1;
-		}
-	}
+    int iBurstTime[] = {23, 19, 10, 11, 5};
+    int priority_array[] = {4, 2, 1, 3, 5};
+    t = 3;
 	
-	n=sizeof(bu)/sizeof(int);
-	printf("Number of Processes = %d", n);
-	
-	t=TIMESLICE;
-	printf("Time Slice = %d", t);
+	n=sizeof(iBurstTime)/sizeof(iBurstTime[0]);
+	printf("Number of Processes = %d\n", n);
+	printf("Time Slice = %d\n", t);
 	
 	//Indexing algo
+    int temp_array[n];
 	for (i = 0; i < n; i++) 
 	{
-		index[pl[i]] =  bu[i];
+		temp_array[priority_array[i]] =  iBurstTime[i];
 	}
 	
 	for (i = 0; i < n; i++)
 	{
-		bu[i] = index[i];
-		pl[i] = i;
+		iBurstTime[i] = temp_array[i];
+		priority_array[i] = i+1;
 	}
-	
-	for(i=0; i<n; i++)
+    
+	while(1)
 	{
-		if(bu[i]!=0)
-		{
-			empty=0;
-			break;
-		}
-		empty=1;
-	}
-	
-	while(!empty)
-	{
+        int counter = 0;
+        for(i=0;i<n;i++)
+        {
+            if(iBurstTime[i]==0)
+            {
+                counter++;
+            }
+        }
+        
+        if(counter==n)
+        {
+            break;
+        }
+        
 		// Loop each process
 		for(i=0; i<n; i++)
 		{
 			// If bu[i] = 0, means the process has already been completed, move on to next process.
-			if(bu[i]!=0)
-				// If bu[i] time lesser than or equal to time slice/quantum,
-				if(bu[i]<=t)
+			if(iBurstTime[i]!=0)
+            {
+                // If bu[i] time lesser than or equal to time slice/quantum,
+				if(iBurstTime[i]<=t)
 				{
 					// Add to temp & turn around time array.
-					tat[i]=temp+bu[i];
-					temp=temp+bu[i];
+					tat[i]=temp+iBurstTime[i];
+					temp=temp+iBurstTime[i];
 					// Set time left to complete process to 0.
-					bu[i]=0;
-					n-=1;
+					iBurstTime[i]=0;
 				}
 				else
 				{
 					// Deduct time slice/quantum from remaining burst time for current process.
-					bu[i]=bu[i]-t;
+					iBurstTime[i]=iBurstTime[i]-t;
 					// Increment temp by t
 					temp=temp+t;
 				}
+            }
 		}
 		
-		//Calculate new priority queue
-		for(i=0; i<n; i++)
-		{
-			
-		
-		//Calculate new dynamic time quantum
-		if(n%2==0)
-		{
-			
-		}
-		else
-		{
-			
-		}
-	}
+        for(i=0;i<n;i++)
+        {
+            for(j=i+1;j<n;j++)
+            {
+                if(iBurstTime[j]==0)
+                {
+                    a = iBurstTime[i];
+                    iBurstTime[i] = iBurstTime[j];
+                    iBurstTime[j] = a;
+                }
+            }
+        }
+        
+        
+        //Calculate new burst time queue
+        for(i=0;i<n;i++)
+        {
+            if(iBurstTime[i]==0)
+            {
+                b+=1;
+            }
+        }
+        n = n-b;
+        
+        //Calculate new dynamic time quantum
+        if(n%2==0)
+        {
+            t = (iBurstTime[priority_array[n/2]] + iBurstTime[1 + priority_array[n/2]])/2;
+        }
+        else
+        {
+             t = iBurstTime[priority_array[(n+1)/2]];
+        }
+    }
 	
 	// ** Calculate and print the 'waiting time' and 'turn-around-time' for each process. **
-	printf("\nProcess ID\tBurst Time\tTurnaround Time\t\tWaiting Time\n");
+	printf("\nPROCESS\tBURST TIME\tWAITING TIME\tTURNAROUND TIME\n");
 	for(i=0; i<n; i++)
 	{
 		// Turn Around Time - burst Time  = Waiting Time
-		wa[i] = tat[i] - ct[i];
-		printf("Process[%d]\t%d\t\t%d\t\t\t%d\n", i + 1, ct[i], tat[i], wa[i]);
+		wa[i] = tat[i] - iBurstTime[i];
+		printf("%d\t%d\t\t%d\t\t\t%d\n", i + 1, iBurstTime[i], wa[i], tat[i]);
 		
 		// Getting Total Waiting & Turn Around Time
 		awt += wa[i];
