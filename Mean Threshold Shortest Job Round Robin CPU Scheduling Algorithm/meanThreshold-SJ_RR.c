@@ -7,7 +7,7 @@ int main() {
     int temp, tempPID, ct[10], wt[10], tat[10], PIDIndex[10];
     int n = 6; // number of processor
     int BT[10] = {5, 6, 7, 9, 2, 3}; // burst time for each process
-    int PID[10] = {0, 1, 2, 3, 4, 5}; //todo: auto populate PID
+    int PID[10];
     int TQ = 3; // time quantum value
 
     // init variables
@@ -18,6 +18,10 @@ int main() {
     float totalTurnaround = 0;
     float totalWaitingTime = 0;
 
+    // auto populate PID
+    for (int i1 = 0; i1 < n; ++i1) {
+        PID[i1]=i1;
+    }
 
     // sorting in ascending order
     for (int i = 0; i < n; ++i) {
@@ -110,11 +114,11 @@ int main() {
 
     for (int k = 0; k < n; ++k) {
         printf("%d\t\t%d\t\t%d\t\t%d\n", k, ct[PIDIndex[k]], wt[PIDIndex[k]], tat[PIDIndex[k]]);
-        totalTurnaround += tat[PIDIndex[k]];
-        totalWaitingTime += wt[PIDIndex[k]];
+        totalTurnaround += (float)tat[PIDIndex[k]];
+        totalWaitingTime += (float)wt[PIDIndex[k]];
     }
-    printf("Average Turnaround Time = %.2f\n",totalTurnaround/n);
-    printf("Average Waiting Time = %.2f\n",totalWaitingTime/n);
+    printf("Average Turnaround Time = %.2f\n",totalTurnaround/(float)n);
+    printf("Average Waiting Time = %.2f\n",totalWaitingTime/(float)n);
 
 
 
