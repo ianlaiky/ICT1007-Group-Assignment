@@ -20,7 +20,7 @@ int main() {
 
     // auto populate PID
     for (int i1 = 0; i1 < n; ++i1) {
-        PID[i1]=i1;
+        PID[i1] = i1;
     }
 
     // sorting in ascending order
@@ -45,13 +45,10 @@ int main() {
     // cloning BT array
     for (int l = 0; l < n; ++l) {
         ct[l] = BT[l];
+        sum += BT[l]; //sum
     }
 
-
-    for (int k = 0; k < n; ++k) {
-        sum += BT[k];
-    }
-
+    // calculating threshold
     int thresholdValue = sum / n;
 
     if (n > 0) {
@@ -73,12 +70,9 @@ int main() {
             // waiting times
             wt[j] = cumulatedtime;
             cumulatedtime = cumulatedtime + BT[j];
-
             // turnaround time
             tat[j] = cumulatedtime;
-
         }
-
         // RRA
         // loop the max number of the slice for the largest burst time process
 
@@ -98,12 +92,10 @@ int main() {
                     }
                 }
             }
-
         }
-
-
     }
-    printf("Numer of Processes = %d\n", n);
+
+    printf("Number of Processes = %d\n", n);
     printf("Time Slice = %d\n", TQ);
     printf("Processes\tBurst Time\tWaiting Time\tTurnaround Time\n");
 
@@ -114,13 +106,11 @@ int main() {
 
     for (int k = 0; k < n; ++k) {
         printf("%d\t\t%d\t\t%d\t\t%d\n", k, ct[PIDIndex[k]], wt[PIDIndex[k]], tat[PIDIndex[k]]);
-        totalTurnaround += (float)tat[PIDIndex[k]];
-        totalWaitingTime += (float)wt[PIDIndex[k]];
+        totalTurnaround += (float) tat[PIDIndex[k]];
+        totalWaitingTime += (float) wt[PIDIndex[k]];
     }
-    printf("Average Turnaround Time = %.2f\n",totalTurnaround/(float)n);
-    printf("Average Waiting Time = %.2f\n",totalWaitingTime/(float)n);
-
-
+    printf("Average Turnaround Time = %.2f\n", totalTurnaround / (float) n);
+    printf("Average Waiting Time = %.2f\n", totalWaitingTime / (float) n);
 
 
 }
