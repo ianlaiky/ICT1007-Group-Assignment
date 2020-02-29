@@ -9,6 +9,7 @@ int BT[10] = {23, 19, 10, 11, 5}; // dynamic burst time for each process
 int priority[10] = {4, 2, 1, 3, 5};
 int timeQuantum_firsttime = 5;
 //int priority[10] = {4, 2, 3, 5, 1};
+int cumulatedTime = 0;
 
 
 typedef struct process_node {
@@ -16,6 +17,8 @@ typedef struct process_node {
     int priority;
     int waitingtime;
     int turnaroundtime;
+    int indexCounter;
+    int PID;
     struct process_node *next;
 } PROCESS_NODE;
 
@@ -33,6 +36,9 @@ PROCESS_NODE populate_data(PROCESS_NODE **head) {
         PROCESS_NODE *new_node = (PROCESS_NODE *) malloc(sizeof(PROCESS_NODE));
         new_node->burstTime = BT[i];
         new_node->priority = priority[i];
+        new_node->waitingtime = 0;
+        new_node->turnaroundtime = 0;
+        new_node->PID = i+1;
         new_node->next = NULL;
         *head = insertHead(*head, new_node);
 
@@ -62,23 +68,105 @@ int get_burst_from_list(PROCESS_NODE *head) {
     return 1;
 }
 
-void deduct_burst_from_list(PROCESS_NODE *head,int deduction_amount){
+
+int get_TA_from_list(PROCESS_NODE *head) {
     PROCESS_NODE *temppNode = head;
 
-    int cumulatedTime = 0;
     while (temppNode != NULL) {
 
-        printf("Printing Burst time: %d\n", temppNode->burstTime);
-        if(temppNode->burstTime>deduction_amount){
-            temppNode->burstTime =  temppNode->burstTime-deduction_amount;
+        printf("Printing Waiting time time: %d\n", temppNode->waitingtime);
+        temppNode = temppNode->next;
+    }
+    return 1;
+}
 
+
+int get_WT_from_list(PROCESS_NODE *head) {
+    PROCESS_NODE *temppNode = head;
+
+    while (temppNode != NULL) {
+
+        printf("Printing Turnaround time: id: %d :  %d\n", temppNode->priority,temppNode->turnaroundtime);
+        temppNode = temppNode->next;
+    }
+    return 1;
+}
+
+
+// return -1 when there is no process left
+int calculate_dynamic_TQ(PROCESS_NODE *head) {
+    int timeQuantum;
+    int temparray[20];
+    int evenOdd = 0;
+    int arrayCounter = 0;
+    PROCESS_NODE *temppNode = head;
+
+    while (temppNode != NULL) {
+        if (temppNode->burstTime > 0) {
+            evenOdd++;
+            temparray[arrayCounter] = temppNode->burstTime;
+            arrayCounter++;
         }
-
-
 
         temppNode = temppNode->next;
     }
 
+    if (evenOdd == 0) {
+        return -1;
+    }
+
+    if (evenOdd == 1) {
+        timeQuantum = temparray[0];
+    } else if (evenOdd % 2 == 0) {
+        timeQuantum = (temparray[(evenOdd / 2)] + temparray[(evenOdd / 2) - 1]) / 2;
+    } else {
+        timeQuantum = temparray[(evenOdd + 1 / 2) - 1];
+    }
+    return timeQuantum;
+
+}
+
+
+// return -1 when all is completed
+int deduct_burst_from_list(PROCESS_NODE **head, int deduction_amount) {
+    PROCESS_NODE *temppNode = *head;
+
+    int allCounter = 0;
+
+    while (temppNode != NULL) {
+
+
+        if (temppNode->burstTime > 0) {
+
+            allCounter += 1;
+            printf("BT check BEFORE WT time: %d\n",temppNode->waitingtime);
+            temppNode->waitingtime = cumulatedTime;
+//            printf("BT check AFTER WT time: %d\n",temppNode->waitingtime);
+
+            if (temppNode->burstTime > deduction_amount) {
+                temppNode->turnaroundtime =temppNode->turnaroundtime+ cumulatedTime + deduction_amount;
+                cumulatedTime = cumulatedTime + deduction_amount;
+                printf("ADDED %d\n", deduction_amount);
+
+            } else {
+                temppNode->turnaroundtime =temppNode->turnaroundtime+ cumulatedTime + temppNode->burstTime;
+                cumulatedTime = cumulatedTime + temppNode->burstTime;
+                printf("ADDEDb %d\n", temppNode->burstTime);
+            }
+//            printf("BT check WT time: %d\n",temppNode->waitingtime);
+
+            printf("BT check BT time: %d %d\n", temppNode->PID,temppNode->waitingtime);
+
+            temppNode->burstTime = temppNode->burstTime - deduction_amount;
+        }
+
+
+        temppNode = temppNode->next;
+    }
+    if (allCounter == 0) {
+        return -1;
+    }
+    return 0;
 }
 
 PROCESS_NODE *sort_linked_list_by_priority(PROCESS_NODE *head) {
@@ -229,9 +317,7 @@ PROCESS_NODE *sort_linked_list_by_bursttime(PROCESS_NODE *head) {
         if (boolbreak == 0) {
             break;
         }
-
     }
-
 
     printf("Count:%d\n", count);
     return statichead;
@@ -244,12 +330,25 @@ int main() {
     populate_data(&head);
 
     head = sort_linked_list_by_priority(head);
-    deduct_burst_from_list(head,timeQuantum_firsttime);
-    get_priority_from_list(head);
-
-
-    head = sort_linked_list_by_bursttime(head);
     get_burst_from_list(head);
+    printf("____\n");
+    deduct_burst_from_list(&head, timeQuantum_firsttime);
+//    head = sort_linked_list_by_bursttime(head);
+    get_burst_from_list(head);
+    printf("____\n");
 
+    int notComplete_TQ = 0;
+    while (1) {
+        head = sort_linked_list_by_bursttime(head);
+        notComplete_TQ = calculate_dynamic_TQ(head);
+        if(notComplete_TQ==-1){
+            break;
+        }
+
+        deduct_burst_from_list(&head,notComplete_TQ);
+
+    }
+    get_TA_from_list(head);
+    get_WT_from_list(head);
 
 }
