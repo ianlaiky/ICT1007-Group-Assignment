@@ -1,4 +1,3 @@
-
 #include<stdio.h> 
 
 int main() {
@@ -12,7 +11,9 @@ int main() {
 	ct = another burst time array (burst time according to code)
 	max = literally max
 	*/
-	int i, j, n, o, k, m, bu[20], wa[20], tat[20], at, ct[20], max, process[20], sum;
+	int i, j, o, k, m, wa[20], tat[20], at, ct[20], max, process[20], sum;
+	int bu[20]={23, 19, 10, 11, 5}; // dynamic burst time for each process
+	int n = 6; // dynamic number of processes
 	/* 
 	Declare float variable for usage
 	awt = average waiting time
@@ -20,23 +21,11 @@ int main() {
 	temp = temporary
 	*/
 	float awt=0, att=0, temp=0;
-
-	/* text to be written to stdout */ 
-	printf("Enter the no of processes: ");
-
-	/* read user data from stdin, # of process */
-	scanf("%d",&n); 
-
 	/* let user input their burst time according to their number of processes 
 	   eg processes #1 -> 3 unit burst time	
 	*/
 	for(i=0; i<n; i++)   {
 		process[i]=i;
-		/* i increment by 1 so stdout to user that it is inputing process 1 */
-		printf("\nEnter Burst Time for process %d: ", i+1);
-		/* read user data from stdin, burst time and put into array*/
-		scanf("%d", &bu[i]);
-		/* copy value into cpu time array*/
 		ct[i]=bu[i];  
 	}  
 	
