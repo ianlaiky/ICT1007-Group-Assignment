@@ -8,7 +8,7 @@ int n = 5; // dynamic number of processor
 int BT[10] = {23, 19, 10, 11, 5}; // dynamic burst time for each process
 int priority[10] = {4, 2, 1, 3, 5};
 int timeQuantum_firsttime = 5;
-//int priority[10] = {4, 2, 3, 5, 1};
+
 int cumulatedTime = 0;
 
 
@@ -161,25 +161,14 @@ int deduct_burst_from_list(PROCESS_NODE **head, int deduction_amount) {
             allCounter += 1;
 
 
-//            printf("BT check AFTER WT time: %d\n",temppNode->waitingtime);
-
             if (temppNode->burstTime > deduction_amount) {
-//                temppNode->turnaroundtime = cumulatedTime + deduction_amount;
                 cumulatedTime = cumulatedTime + deduction_amount;
 
-
             } else {
-
                 temppNode->turnaroundtime = cumulatedTime + temppNode->burstTime;
-
                 temppNode->waitingtime = temppNode->turnaroundtime - temppNode->originalBT;
                 cumulatedTime = cumulatedTime + temppNode->burstTime;
-
             }
-//            printf("BT check WT time: %d\n",temppNode->waitingtime);
-
-
-
             temppNode->burstTime = temppNode->burstTime - deduction_amount;
         }
 
