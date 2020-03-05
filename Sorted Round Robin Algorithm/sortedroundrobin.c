@@ -11,10 +11,10 @@ int main() {
 	ct = another burst time array (burst time according to code)
 	max = literally max
 	*/
-	int i, j, o, k, m, wa[20], tat[20], at, ct[20], max, process[20];
+	int i, j, o, k, m, wa[20], tat[20], ct[20], max, process[20];
 	int sum = 0;
-	int bu[20]={23, 19, 10, 11, 5}; // dynamic burst time for each process
-	int n = 6; // dynamic number of processes
+	int bu[20]={1,5,1,2,3,3,2,3,4,1}; // dynamic burst time for each process
+	int n = 10; // dynamic number of processes
 	/* 
 	Declare float variable for usage
 	awt = average waiting time
@@ -22,6 +22,7 @@ int main() {
 	temp = temporary
 	*/
 	float awt=0, att=0, temp=0;
+	float at=0;
 	/* let user input their burst time according to their number of processes 
 	   eg processes #1 -> 3 unit burst time	
 	*/
@@ -115,7 +116,7 @@ int main() {
 	*/
 	printf("\n\nAverage Waiting Time= %f",awt/n); 
   	printf("\nAverage Turnaround Time = %f\n",att/n); 
-	printf("\nAverage Time Slice %d\n", at);
+	printf("\nAverage Time Slice %f\n", at);
 	
 	return 0;
 } 
