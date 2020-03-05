@@ -5,10 +5,10 @@ int main() {
 
     // Data
     int temp, tempPID, ct[10], wt[10], tat[10], PIDIndex[10];
-    int n = 6; // number of processor
-    int BT[10] = {5, 6, 7, 9, 2, 3}; // burst time for each process
+    int n = 10; // number of processor
+    int BT[10] = {15,3,5,2,4,3,26,12,2,1}; // burst time for each process
     int PID[10];
-    int TQ = 3; // time quantum value
+    int TQ = 5; // time quantum value
 
     // init variables
     int sum = 0;
