@@ -8,7 +8,7 @@ int main() {
     int n = 10; // number of processor
     int BT[10] = {15,3,5,2,4,3,26,12,2,1}; // burst time for each process
     int PID[10];
-    int TQ = 5; // time quantum value
+    int TQ = 15; // time quantum value
 
     // init variables
     int sum = 0;
