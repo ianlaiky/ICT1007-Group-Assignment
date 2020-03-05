@@ -79,7 +79,7 @@ int main() {
         for (int rraindex = 0; rraindex < (ct[n - 1] / TQ) + 1; ++rraindex) {
 
             // loop the number of process left
-            for (int i = countr; i < n; ++i) {
+            for (int i = counts; i < n; ++i) {
                 if (BT[i] != 0) {
                     if (BT[i] <= TQ) {
                         tat[i] = cumulatedtime + BT[i];
@@ -105,7 +105,7 @@ int main() {
     }
 
     for (int k = 0; k < n; ++k) {
-        printf("%d\t\t%d\t\t%d\t\t%d\n", k, ct[PIDIndex[k]], wt[PIDIndex[k]], tat[PIDIndex[k]]);
+        printf("%d\t\t%d\t\t%d\t\t%d\n", k+1, ct[PIDIndex[k]], wt[PIDIndex[k]], tat[PIDIndex[k]]);
         totalTurnaround += (float) tat[PIDIndex[k]];
         totalWaitingTime += (float) wt[PIDIndex[k]];
     }
